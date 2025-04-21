@@ -9,7 +9,7 @@ typedef struct srtf
     int tat;       // Turn Around Time
     int wt;        // Waiting Time
     int ct;        // Completion Time
-} srtf;1
+} srtf;
 
 int sort(srtf[], int);
 
