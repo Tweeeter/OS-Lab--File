@@ -1,0 +1,103 @@
+#include<stdio.h>
+
+int compare(int temp[],int Avail[], int R)
+{
+	int i;
+	for(i=0;i<R;i++)
+	{
+		if(temp[i] > Avail[i])
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+main()
+{
+	int i,j,R,P;
+    printf("Number of Process: ");
+	scanf("%d",&P);
+	printf("Types of Resources: ");
+	scanf("%d",&R);
+	int Allo[P][R], Claim[P][R], Need[P][R],Avai[R],finished[P];
+	
+	printf("Enter Allocation Matrix :\n");
+    for(i=0;i<P;i++)
+	{
+		for(j=0;j<R;j++)
+		{
+			printf("[%d x %d]=",i+1,j+1);
+			scanf("%d",&Allo[i][j]);
+		}
+	}
+	
+	printf("Enter Claim Matrix :\n");
+    for(i=0;i<P;i++)
+	{
+		for(j=0;j<R;j++)
+		{
+			printf("[%d x %d]=",i+1,j+1);
+			scanf("%d",&Claim[i][j]);
+		}
+	}
+	
+	printf("Enter Number of Available Resources:\n");
+	for(i=0;i<R;i++)
+	{
+		printf("Enter Number of Resource of Type %d: ",i+1);
+		scanf("%d",&Avai[i]);
+	}
+	
+	//calculate need matrix
+	for(i=0;i<P;i++)
+	{
+		for(j=0;j<R;j++)
+		{
+			Need[i][j]=Claim[i][j]-Allo[i][j];
+		}
+	}
+	for (i = 0; i < P; i++) 
+	{
+        finished[i] = 0;
+    }
+	int completed=0;
+	while(completed<P)
+	{
+		int done=0;
+		for(i=0;i<P;i++)
+		{	
+			if(!finished[i])
+			{
+				int temp[R];
+				//extraxt row by process
+				for(j=0;j<R;j++)
+				{
+					temp[j]=Need[i][j];
+				}
+				//check available satisfy row of need matrix
+				if( compare(temp,Avai,R))
+				{
+					for(j=0;j<R;j++)
+					{
+						Avai[j]+=Allo[i][j];
+					}
+					finished[i]=1;
+					completed++;
+					done=1;
+					printf("Process %d has completed.\n", i + 1);
+				}
+			}
+			
+		}
+		if(!done)
+		{
+			printf("It is a DEADLOCK.");
+			break;
+		}
+	}
+	if(completed==P)
+	{
+		printf("System is in a SAFE STATE.\n");
+	}
+	return 0;
+}
